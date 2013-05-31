@@ -38,6 +38,8 @@ All queries in Aqua are handled through the `Aqua::QueryManager` class. For exam
     query.query << Aqua::Nodes::Text.new("description", "Find Me")
     query.query << Aqua::Nodes::Range.new("created_at", Time.gm(2012, 1, 1), Time.gm(2012, 12, 31), true, true)
     query.to_elastic_search
+    
+    => {"query"=>{"filtered"=>{"query"=>{"and"=>[{"text"=>{"description"=>"Find Me"}}, {"range"=>{"created_at"=>{"from"=>2012-01-01 00:00:00 UTC, "to"=>2012-12-31 00:00:00 UTC, "include_lower"=>true, "include_upper"=>true}}}]}}}, "sort"=>[]}
 
 ## Contributing
 
