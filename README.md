@@ -1,0 +1,4 @@
+aqua
+====
+
+A query algebra
