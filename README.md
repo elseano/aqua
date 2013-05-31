@@ -1,6 +1,12 @@
 # Aqua
 
-TODO: Write a gem description
+A Query Algebra
+
+Inspired from the Arel project, Aqua attempts be the framework's framework for connecting to and working with searching.
+
+Currently only ElasticSearch is supported.
+
+**Note that this is a work in progress! Contributions welcome!**
 
 ## Installation
 
@@ -18,7 +24,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Currently Aqua supports the following operations:
+
+* Index creation, deletion, and flushing.
+* Mapping creation, and updating.
+* Document creation, updating and deletion.
+
+### Querying
+
+All queries in Aqua are handled through the `Aqua::QueryManager` class. For example, to query a document for containing the text "Find Me" with the created_at between Jan 2012 and Dec 2012:
+
+    query = Aqua::QueryManager.new
+    query.query << Aqua::Nodes::Text.new("description", "Find Me")
+    query.query << Aqua::Nodes::Range.new("created_at", Time.gm(2012, 1, 1), Time.gm(2012, 12, 31), true, true)
+    query.to_elastic_search
 
 ## Contributing
 

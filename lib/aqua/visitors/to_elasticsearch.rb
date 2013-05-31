@@ -4,7 +4,7 @@ module Aqua
       
       private
 
-      def visit_Apollo_Search_Nodes_FacetList(o)
+      def visit_Aqua_Nodes_FacetList(o)
         facets = {}
         o.nodes.each do |node|
           facets.merge!(visit(node))
@@ -12,13 +12,13 @@ module Aqua
         facets          
       end
 
-      def visit_Apollo_Search_Nodes_NamedFacet(o)
+      def visit_Aqua_Nodes_NamedFacet(o)
         {
           o.name => visit(o.expr)
         }
       end
 
-      def visit_Apollo_Search_Nodes_StatisticalFacet(o)
+      def visit_Aqua_Nodes_StatisticalFacet(o)
         r = Hash.new
         r["field"] = o.field_name
         r["facet_filter"] = accept(o.filter) if o.filter
@@ -28,7 +28,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_RangeFacet(o)
+      def visit_Aqua_Nodes_RangeFacet(o)
         r = Hash.new
         r["field"] = o.field_name
         r["ranges"] = o.ranges.nodes.collect { |node| accept(node) }
@@ -39,14 +39,14 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_RangeFacetRange(o)
+      def visit_Aqua_Nodes_RangeFacetRange(o)
         r = Hash.new
         r["from"] = o.from if o.from
         r["to"] = o.to if o.to
         r
       end
 
-      def visit_Apollo_Search_Nodes_GeoDistanceFacet(o)
+      def visit_Aqua_Nodes_GeoDistanceFacet(o)
         r = Hash.new
         r[o.field_name] = { "lat" => o.lat, "long" => o.long }
         r["value_field"] = o.value_field if o.value_field
@@ -58,7 +58,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_TermsFacet(o)
+      def visit_Aqua_Nodes_TermsFacet(o)
         r = Hash.new
         r["field"] = o.field_name
         r["size"] = o.size if o.size
@@ -72,7 +72,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_TermsStatsFacet(o)
+      def visit_Aqua_Nodes_TermsStatsFacet(o)
         r = Hash.new
         r["key_field"] = o.key_field
         r["value_field"] = o.value_field
@@ -85,7 +85,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_MultiFieldMapping(o)
+      def visit_Aqua_Nodes_MultiFieldMapping(o)
         fields = {}
         o.nodes.each do |node|
           fields.merge!(visit(node))
@@ -99,7 +99,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_DocumentStatement(o)
+      def visit_Aqua_Nodes_DocumentStatement(o)
         fields = {}
         o.fields.each do |field|
           fields.merge!( { field[0] => field[1] } )
@@ -110,7 +110,7 @@ module Aqua
         fields
       end
 
-      def visit_Apollo_Search_Nodes_MappingStatement(o)
+      def visit_Aqua_Nodes_MappingStatement(o)
         fields = {}
         o.nodes.each do |node|
           fields.merge!(accept(node))
@@ -123,7 +123,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_ObjectMapping(o)
+      def visit_Aqua_Nodes_ObjectMapping(o)
         properties = {}
         o.nodes.each do |node|
           properties.merge!(accept(node))
@@ -134,7 +134,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Mapping(o)
+      def visit_Aqua_Nodes_Mapping(o)
         options = o.options
         case options.delete(:analysis)
         when true then options[:index] = "analyzed"
@@ -146,21 +146,21 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_MatchAll(o)
+      def visit_Aqua_Nodes_MatchAll(o)
         {
           "match_all" => {}
         }
       end
 
-      def visit_Apollo_Search_Nodes_CreateIndexStatement(o)
+      def visit_Aqua_Nodes_CreateIndexStatement(o)
         nil
       end
 
-      def visit_Apollo_Search_Nodes_QueryStatement(o)
+      def visit_Aqua_Nodes_QueryStatement(o)
         query = {}
         query["query"] = {
           "filtered" => {
-            "query" => visit(o.query || Apollo::Search::Nodes::MatchAll.new),
+            "query" => visit(o.query || Nodes::MatchAll.new),
           }
         }
           
@@ -170,13 +170,13 @@ module Aqua
         query
       end
 
-      def visit_Apollo_Search_Nodes_Order(o)
+      def visit_Aqua_Nodes_Order(o)
         {
           o.field_name => { "order" => o.direction.to_s == "ascending" ? "asc" : "desc" }
         }
       end
 
-      def visit_Apollo_Search_Nodes_DateHistogramFacet(o)
+      def visit_Aqua_Nodes_DateHistogramFacet(o)
         result = {
           "interval" => o.interval
         }
@@ -196,7 +196,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_HistogramFacet(o)
+      def visit_Aqua_Nodes_HistogramFacet(o)
         result = Hash.new
         result["interval"] = o.interval if o.interval
         result["time_interval"] = o.time_interval if o.time_interval
@@ -215,7 +215,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Match(o)
+      def visit_Aqua_Nodes_Match(o)
         {
           "match" => {
             o.field_name => o.value
@@ -223,7 +223,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Prefix(o)
+      def visit_Aqua_Nodes_Prefix(o)
         {
           "prefix" => {
             o.field_name => o.value
@@ -231,7 +231,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Term(o)
+      def visit_Aqua_Nodes_Term(o)
         {
           "term" => {
             o.field_name => o.value
@@ -239,7 +239,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Text(o)
+      def visit_Aqua_Nodes_Text(o)
         {
           "text" => {
             o.field_name => o.value
@@ -247,7 +247,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Terms(o)
+      def visit_Aqua_Nodes_Terms(o)
         {
           "terms" => {
             o.field_name => o.values
@@ -255,13 +255,13 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Not(o)
+      def visit_Aqua_Nodes_Not(o)
         {
           "not" => visit(o.expr)
         }
       end
 
-      def visit_Apollo_Search_Nodes_And(o)
+      def visit_Aqua_Nodes_And(o)
         if o.nodes.length == 0
           visit(Nodes::MatchAll.new)
         elsif o.nodes.length == 1
@@ -273,13 +273,13 @@ module Aqua
         end
       end
 
-      def visit_Apollo_Search_Nodes_Or(o)
+      def visit_Aqua_Nodes_Or(o)
         {
           "or" => o.nodes.collect { |expr| visit(expr) }
         }
       end
 
-      def visit_Apollo_Search_Nodes_Exists(o)
+      def visit_Aqua_Nodes_Exists(o)
         {
           "exists" => {
             "field" => o.field_name
@@ -287,7 +287,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Missing(o)
+      def visit_Aqua_Nodes_Missing(o)
         {
           "missing" => {
             "field" => o.field_name,
@@ -297,7 +297,7 @@ module Aqua
         }
       end
 
-      def visit_Apollo_Search_Nodes_Range(o)
+      def visit_Aqua_Nodes_Range(o)
         if o.lower_value && o.upper_value
           {
             "range" => {

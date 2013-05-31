@@ -1,7 +1,7 @@
 
 module Aqua
   module Connections
-    class ElasticSearch < Apollo::Search::Visitors::Visitor
+    class ElasticSearch < Aqua::Visitors::Visitor
 
       alias execute accept
       private :accept

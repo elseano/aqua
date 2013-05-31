@@ -1,18 +1,17 @@
 module Aqua
   class QueryManager
 
-    attr_reader :query, :filter
-    attr_accessor :limit, :offset
-
     def initialize
-      @query = Nodes::And.new
-      @filter = Nodes::And.new
-      @limit = nil
-      @offset = nil
+      @statement = Nodes::QueryStatement.new
+      @statement.query ||= Nodes::And.new
+    end
+
+    def query
+      @statement.query
     end
 
     def to_elastic_search
-      Visitors::ToElasticsearch.new.accept(self)
+      Visitors::ToElasticsearch.new.accept(@statement)
     end
 
     def execute
